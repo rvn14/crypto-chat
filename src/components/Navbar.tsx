@@ -11,10 +11,20 @@ const Navbar = () => {
 
   return (
     <div className='px-4 py-3 w-full text-primary bg-accent flex justify-between items-center mb-2 shadow-sm'>
-        <div className="text-lg font-bold">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
-            CryptoChat
-          </Link>
+        <div className="flex items-center gap-6">
+          <div className="text-lg font-bold">
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              CryptoChat
+            </Link>
+          </div>
+          <nav className="flex items-center gap-4 text-sm">
+            <Link href="/symmetrickey" className="hover:opacity-80 transition-opacity">
+              Symmetric Key
+            </Link>
+            <Link href="/asymmetrickey" className="hover:opacity-80 transition-opacity">
+              Asymmetric Key
+            </Link>
+          </nav>
         </div>
         <div className="flex items-center gap-3">
           {!user ? <SignIn /> : <SignOut />}
