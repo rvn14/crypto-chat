@@ -19,7 +19,11 @@ const SignOut = () => {
     }
 
     return (
-        <button className="p-2 bg-red-400 cursor-pointer" onClick={SignOutFromGoogle} type="button">
+        <button 
+            className="px-4 py-2 bg-gray-500 cursor-pointer hover:bg-gray-600 text-white rounded-md transition-colors shadow-sm font-medium" 
+            onClick={SignOutFromGoogle} 
+            type="button"
+        >
             Sign Out
         </button>
     );

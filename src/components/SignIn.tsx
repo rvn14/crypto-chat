@@ -25,7 +25,15 @@ const SignIn = () => {
             });
     }
 
-    return <button className="p-2 bg-red-400 cursor-pointer" onClick={SignInWithGoogle} type="button">SignIn</button>
+    return (
+        <button 
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 cursor-pointer text-white rounded-md transition-colors shadow-sm font-medium flex items-center"
+            onClick={SignInWithGoogle} 
+            type="button"
+        >
+            <span className="mr-1">Sign In</span>
+        </button>
+    )
 }
 
 export default SignIn;
