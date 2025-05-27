@@ -1,18 +1,45 @@
 "use client";
 
-import { auth, signOut } from "../lib/firebase";
+import { 
+    auth, 
+    signOut, 
+    firestore, 
+    doc, 
+    deleteDoc
+} from "../lib/firebase";
 
 const SignOut = () => {
-    const SignOutFromGoogle = () => {
+    const removeUserFromFirestore = async (userId: string) => {
+        if (!userId) return;
+        
+        try {
+            const userRef = doc(firestore, "users", userId);
+            await deleteDoc(userRef);
+            console.log("User removed from Firestore");
+        } catch (error) {
+            console.error("Error removing user from Firestore:", error);
+        }
+    };
+
+    const SignOutFromGoogle = async () => {
         if (auth.currentUser) {
-            signOut(auth)
-                .then(() => {
-                    console.log("User signed out");
-                })
-                .catch((error) => {
-                    console.error("Error signing out:", error);
+            const userId = auth.currentUser.uid;
+            
+            try {
+                // Remove user from Firestore first
+                await removeUserFromFirestore(userId);
+                
+                // Then sign out from Firebase Auth
+                await signOut(auth);
+                console.log("User signed out");
+            } catch (error) {
+                console.error("Error signing out:", error);
+                if (error instanceof Error) {
                     alert("Failed to sign out: " + error.message);
-                });
+                } else {
+                    alert("Failed to sign out: An unknown error occurred");
+                }
+            }
         } else {
             console.warn("No user is currently signed in");
         }

@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client"
@@ -99,8 +101,9 @@ function page() {
       
       toast.success("New key pair generated successfully");
     } catch (err) {
-      setError(`Failed to generate key pair: ${err.message}`);
-      toast.error(`Failed to generate key pair: ${err.message}`);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Failed to generate key pair: ${errorMessage}`);
+      toast.error(`Failed to generate key pair: ${errorMessage}`);
     } finally {
       setLoading(prev => ({ ...prev, generating: false }));
     }
@@ -125,10 +128,10 @@ function page() {
       const pubKey = await importPublicKey(encryptWithPublicKey);
       const encrypted = await asymEncrypt(pubKey, plaintext);
       setCt(encrypted);
-      toast.success("Message encrypted successfully");
     } catch (err) {
-      setError(`Encryption failed: ${err.message}`);
-      toast.error(`Encryption failed: ${err.message}`);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Encryption failed: ${errorMessage}`);
+      toast.error(`Encryption failed: ${errorMessage}`);
     } finally {
       setLoading(prev => ({ ...prev, encrypting: false }));
     }
@@ -153,12 +156,12 @@ function page() {
       const privKey = await importPrivateKey(decryptWithPrivateKey);
       const decryptedText = await asymDecrypt(privKey, ciphertext);
       setDec(decryptedText);
-      toast.success("Message decrypted successfully");
     } catch (err) {
       console.error("Decryption error:", err);
-      setError(`Decryption failed: ${err.message || "Invalid key or encrypted message format"}`);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Decryption failed: ${errorMessage || "Invalid key or encrypted message format"}`);
       setDec("");
-      toast.error(`Decryption failed: ${err.message || "Invalid key or encrypted message format"}`);
+      toast.error(`Decryption failed: ${errorMessage || "Invalid key or encrypted message format"}`);
     } finally {
       setLoading(prev => ({ ...prev, decrypting: false }));
     }
@@ -237,7 +240,7 @@ function page() {
     }
   };
 
-  const copyToClipboard = (text, type) => {
+  const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
     setCopied(prev => ({ ...prev, [type]: true }));
     toast.success(`${type.includes("Key") ? 'Key' : 'Message'} copied to clipboard`);

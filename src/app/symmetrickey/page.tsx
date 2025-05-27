@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client"
@@ -262,7 +263,7 @@ function page() {
     }
   };
 
-  const copyToClipboard = (text, type) => {
+  const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
     setCopied(prev => ({ ...prev, [type]: true }));
     toast.success(`${type === 'key' ? 'Key' : 'Message'} copied to clipboard`);

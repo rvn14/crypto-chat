@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, orderBy, limit, addDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, limit, addDoc, serverTimestamp, getDoc, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { getAuth, GithubAuthProvider, signInWithPopup, signOut, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 
 // Firebase configuration
@@ -34,5 +34,8 @@ export {
     serverTimestamp,
     signInWithRedirect,
     GoogleAuthProvider,
-    getDoc
+    getDoc,
+    setDoc,
+    doc,
+    deleteDoc
 };
