@@ -26,6 +26,7 @@ const ChatRoom = () => {
     const [messages, messagesLoading] = useCollectionData(messagesQuery, { idField: 'id' } as any);
     const [formValue, setFormValue] = useState('');
     const scrollRef = useRef<HTMLDivElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     
     // Scroll to bottom when messages change or user signs in
     useEffect(() => {
@@ -58,13 +59,39 @@ const ChatRoom = () => {
             });
             
             setFormValue('');
+            // Reset textarea height
+            if (textareaRef.current) {
+                textareaRef.current.style.height = 'auto';
+            }
         } catch (error) {
             console.error("Error sending message:", error);
         }
     };
+
+    // Handle textarea height adjustment
+    const adjustTextareaHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const textarea = e.target;
+        setFormValue(textarea.value);
+        
+        // Reset height to auto to properly calculate the new height
+        textarea.style.height = 'auto';
+        
+        // Set new height based on scroll height (with a max height)
+        const newHeight = Math.min(textarea.scrollHeight, 200);
+        textarea.style.height = `${newHeight}px`;
+    };
+    
+    // Handle keyboard shortcuts
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        // Send message on Enter without Shift key
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(e);
+        }
+    };
     
   return (
-    <div className="w-full min-w-2xl mx-auto p-3 sm:p-4 md:p-6 rounded-lg shadow-lg bg-card">
+    <div className="w-full max-w-4xl mx-auto p-3 sm:p-4 md:p-6 rounded-lg shadow-lg bg-card">
         <div className="flex justify-between items-center mb-4 p-3 bg-muted/50 rounded-lg">
             <h1 className="text-xl font-bold text-foreground">Chat Room</h1>
             <div className="flex items-center gap-2">
@@ -143,15 +170,20 @@ const ChatRoom = () => {
         </div>
         
         {user ? (
-            <form onSubmit={sendMessage} className="flex gap-2 items-center">
+            <form onSubmit={sendMessage} className="flex gap-2 items-end">
                 <div className="relative flex-1">
-                    <input 
-                        type="text"
+                    <textarea 
+                        ref={textareaRef}
                         value={formValue}
-                        onChange={(e) => setFormValue(e.target.value)}
-                        placeholder="Type a message..."
-                        className="w-full p-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                        onChange={adjustTextareaHeight}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Type a message... (Press Enter to send, Shift+Enter for new line)"
+                        className="w-full p-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background resize-none min-h-[50px]"
+                        rows={1}
                     />
+                    <div className="text-xs text-muted-foreground mt-1 ml-1">
+                        Press Shift+Enter for new line
+                    </div>
                 </div>
                 <Button 
                     type="submit" 
